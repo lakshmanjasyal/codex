@@ -1,0 +1,204 @@
+{
+  "codes": {
+    "R302.1": {
+      "title": "Exterior Wall Envelope",
+      "category": "Building Planning",
+      "description": "The exterior wall envelope shall be designed and constructed to prevent the accumulation of water within the wall assembly.",
+      "requirements": [
+        "Weather-resistant exterior wall envelope",
+        "Proper flashing and drainage",
+        "Protection against moisture intrusion"
+      ],
+      "violations": [
+        "Structural cracks allowing water penetration",
+        "Missing or damaged flashing",
+        "Deteriorated exterior wall materials"
+      ]
+    },
+    "R806.1": {
+      "title": "Ventilation Required",
+      "category": "Roof-Ceiling Construction",
+      "description": "Enclosed attics and enclosed rafter spaces shall have ventilation. The minimum net free ventilating area shall be 1/150 of the area of the space ventilated.",
+      "requirements": [
+        "Adequate attic ventilation",
+        "Proper moisture control",
+        "Prevention of condensation damage"
+      ],
+      "violations": [
+        "Water damage from roof leaks",
+        "Moisture accumulation",
+        "Ceiling water staining",
+        "Mold or mildew growth"
+      ]
+    },
+    "E3404.1": {
+      "title": "General",
+      "category": "Electrical",
+      "description": "Ground-fault circuit-interrupter protection for personnel shall be provided as required in this section.",
+      "requirements": [
+        "GFCI protection in required locations",
+        "Proper grounding systems",
+        "Protection against electrical shock"
+      ],
+      "violations": [
+        "Missing GFCI protection",
+        "Outdated electrical wiring",
+        "Improper grounding",
+        "Electrical hazards in wet locations"
+      ]
+    },
+    "R403.1": {
+      "title": "General Foundation Requirements",
+      "category": "Foundations",
+      "description": "All foundation and foundation walls shall be constructed of materials specified in Section R402 and shall be built to support all loads in accordance with Section R301.",
+      "requirements": [
+        "Adequate foundation depth and width",
+        "Proper reinforcement",
+        "Support for structural loads"
+      ],
+      "violations": [
+        "Foundation cracks",
+        "Settlement issues",
+        "Structural deficiencies",
+        "Deteriorated foundation materials"
+      ]
+    },
+    "P2903.2": {
+      "title": "Water Service Pipe Size",
+      "category": "Plumbing",
+      "description": "The minimum size of individual water distribution lines shall be in accordance with Table P2903.7.",
+      "requirements": [
+        "Proper pipe sizing",
+        "Adequate water pressure",
+        "No leaks in distribution system"
+      ],
+      "violations": [
+        "Plumbing leaks",
+        "Undersized pipes",
+        "Water damage from pipe failures",
+        "Improper pipe materials"
+      ]
+    },
+    "R315.1": {
+      "title": "Carbon Monoxide Alarms",
+      "category": "Building Planning",
+      "description": "Carbon monoxide alarms shall be installed in dwelling units within which fuel-burning appliances are installed.",
+      "requirements": [
+        "CO alarms in required locations",
+        "Proper installation and maintenance",
+        "Protection against carbon monoxide poisoning"
+      ],
+      "violations": [
+        "Missing carbon monoxide detectors",
+        "Expired or non-functional alarms",
+        "Improper alarm placement"
+      ]
+    },
+    "R308.4": {
+      "title": "Hazardous Locations",
+      "category": "Building Planning",
+      "description": "Glazing in hazardous locations shall be safety glazing conforming to CPSC 16 CFR Part 1201.",
+      "requirements": [
+        "Safety glazing in hazardous locations",
+        "Impact-resistant glass where required",
+        "Protection from injury"
+      ],
+      "violations": [
+        "Non-safety glass in hazardous locations",
+        "Broken or cracked windows",
+        "Missing or damaged glazing"
+      ]
+    },
+    "R602.10": {
+      "title": "Wall Bracing",
+      "category": "Wall Construction",
+      "description": "Buildings shall be braced in accordance with this section and intermittent braced wall lines shall be parallel to the ridgeline.",
+      "requirements": [
+        "Adequate wall bracing",
+        "Proper structural support",
+        "Resistance to lateral loads"
+      ],
+      "violations": [
+        "Insufficient wall bracing",
+        "Structural wall cracks",
+        "Wall deflection or movement",
+        "Missing bracing elements"
+      ]
+    },
+    "R703.1": {
+      "title": "General Exterior Covering",
+      "category": "Wall Covering",
+      "description": "Exterior walls shall provide the building with a weather-resistant exterior wall envelope.",
+      "requirements": [
+        "Weather-resistant exterior covering",
+        "Protection against water and air infiltration",
+        "Durable exterior materials"
+      ],
+      "violations": [
+        "Deteriorated siding or exterior finish",
+        "Paint peeling or deterioration",
+        "Water infiltration through exterior walls",
+        "Damaged exterior cladding"
+      ]
+    },
+    "R905.2": {
+      "title": "Asphalt Shingles",
+      "category": "Roof Covering",
+      "description": "Asphalt shingles shall be installed in accordance with the manufacturer's installation instructions.",
+      "requirements": [
+        "Proper shingle installation",
+        "Adequate fastening",
+        "Weather-tight roof covering"
+      ],
+      "violations": [
+        "Missing or damaged shingles",
+        "Roof leaks",
+        "Improper installation",
+        "Weathering and deterioration"
+      ]
+    },
+    "M1411.3": {
+      "title": "Condensate Disposal",
+      "category": "HVAC",
+      "description": "Condensate from all cooling coils and evaporators shall be conveyed from the drain pan outlet to an approved place of disposal.",
+      "requirements": [
+        "Proper condensate drainage",
+        "Prevention of water damage",
+        "Functional drain systems"
+      ],
+      "violations": [
+        "HVAC condensate leaks",
+        "Clogged drain lines",
+        "Water damage from HVAC systems",
+        "Improper condensate disposal"
+      ]
+    },
+    "E3605.1": {
+      "title": "Receptacle Outlets Required",
+      "category": "Electrical",
+      "description": "Receptacles shall be installed such that no point along the floor line of any wall space is more than 6 feet from a receptacle outlet.",
+      "requirements": [
+        "Adequate receptacle spacing",
+        "Proper electrical coverage",
+        "Safe electrical access"
+      ],
+      "violations": [
+        "Insufficient electrical outlets",
+        "Non-functional receptacles",
+        "Damaged electrical outlets",
+        "Missing required outlets"
+      ]
+    }
+  },
+  "categories": [
+    "Building Planning",
+    "Foundations",
+    "Wall Construction",
+    "Wall Covering",
+    "Roof-Ceiling Construction",
+    "Roof Covering",
+    "Electrical",
+    "Plumbing",
+    "HVAC"
+  ]
+}
