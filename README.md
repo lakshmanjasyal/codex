@@ -1,7 +1,7 @@
 # SafeNest AI 🏠
 ### Turning Raw Inspection Data into Actionable Safety Intelligence
 
-**SafeNest AI** is a multimodal Generative AI platform designed to revolutionize property inspections. By combining computer vision, natural language processing, and advanced reasoning, it transforms messy photos and handwritten notes into instant, objective safety reports.
+**SafeNest AI** is an advanced multimodal platform designed to revolutionize property inspections. By combining computer vision, natural language processing, and reasoning, it transforms messy photos and handwritten notes into instant, objective safety reports.
 
 ---
 
@@ -14,7 +14,7 @@ SafeNest AI provides an intelligent assistant that handles the heavy lifting:
 - **Risk Prioritization**: Automated scoring to tell you exactly how safe a property is.
 - **Real-Time Cost Forecasting**: Estimates for repairs to help with financial planning.
 - **Multi-Language Support**: Fully localized for English, Hindi, Tamil, Telugu, Kannada, and Malayalam.
-- **Interactive AI Chatbot**: A dedicated assistant to answer follow-up questions about your specific inspection results.
+- **Interactive Intelligent Chatbot**: A dedicated assistant to answer follow-up questions about your specific inspection results.
 
 ---
 
