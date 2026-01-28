@@ -533,11 +533,6 @@ Return ONLY a JSON array. No other text."""
         # Sort by confidence (highest first)
         combined.sort(key=lambda x: -x["confidence"])
         
-        # Apply aggressive cost reduction to make estimates very affordable
-        # Reduce individual defect costs by 70% (multiply by 0.3)
-        for defect in combined:
-            defect["estimated_cost"] = int(defect["estimated_cost"] * 0.3)
-        
         # Limit to top 5 most confident defects
         return combined[:5]
 
