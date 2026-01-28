@@ -13,6 +13,14 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
+# Global flag for OpenAI availability
+OPENAI_AVAILABLE = False
+try:
+    from openai import OpenAI
+    OPENAI_AVAILABLE = True
+except ImportError:
+    pass
+
 class IRCKnowledgeBase:
     """RAG-based IRC Code Knowledge Base"""
     
@@ -92,13 +100,11 @@ class VisionAgent:
         self.openai_url = "https://api.openai.com/v1/chat/completions"
         
         # Initialize OpenAI client if available
-        if self.openai_api_key:
-            try:
-                from openai import OpenAI
-                self.openai_client = OpenAI(api_key=self.openai_api_key)
-            except ImportError:
-                print("WARNING: OpenAI library not installed. Run: pip install openai")
-                self.openai_client = None
+        if self.openai_api_key and OPENAI_AVAILABLE:
+            self.openai_client = OpenAI(api_key=self.openai_api_key)
+        elif self.openai_api_key and not OPENAI_AVAILABLE:
+            print("WARNING: OpenAI library not installed. Run: pip install openai")
+            self.openai_client = None
         else:
             self.openai_client = None
         
@@ -764,8 +770,11 @@ class ChatAgent:
     
     def __init__(self, openai_api_key=None):
         self.openai_api_key = openai_api_key or os.getenv('OPENAI_API_KEY')
-        if self.openai_api_key:
+        if self.openai_api_key and OPENAI_AVAILABLE:
             self.client = OpenAI(api_key=self.openai_api_key)
+        elif self.openai_api_key and not OPENAI_AVAILABLE:
+            self.client = None
+            print("WARNING: OpenAI library not installed for ChatAgent")
         else:
             self.client = None
             print("WARNING: No OpenAI API key found for ChatAgent")
