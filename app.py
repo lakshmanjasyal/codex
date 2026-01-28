@@ -8,6 +8,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from simplified_backend import AgentOrchestrator
+from translations import get_text
 import time
 
 # Page Configuration
@@ -385,8 +386,10 @@ def get_orchestrator():
 orchestrator = get_orchestrator()
 
 # Animated Header
-st.markdown('<h1 class="main-header">🏠 SafeNest AI</h1>', unsafe_allow_html=True)
-st.markdown('<p class="subtitle">Next-Generation Residential Infrastructure Intelligence Platform</p>', unsafe_allow_html=True)
+# Get current language for header
+current_lang = st.session_state.get('lang', 'en')
+st.markdown(f'<h1 class="main-header">{get_text(current_lang, "app_title")}</h1>', unsafe_allow_html=True)
+st.markdown(f'<p class="subtitle">{get_text(current_lang, "app_subtitle")}</p>', unsafe_allow_html=True)
 
 # Initialize session state
 if 'uploaded_images' not in st.session_state:
@@ -395,12 +398,33 @@ if 'analysis_complete' not in st.session_state:
     st.session_state.analysis_complete = False
 if 'mock_results' not in st.session_state:
     st.session_state.mock_results = None
+if 'lang' not in st.session_state:
+    st.session_state.lang = 'en'  # Default to English
 
 # Sidebar - Property Information
 with st.sidebar:
+    # Language Selector (First thing in sidebar)
+    st.markdown("### 🌐 Language / भाषा")
+    
+    lang = st.selectbox(
+        label="Select Language",
+        options=['en', 'hi', 'ta', 'te', 'kn', 'ml'],
+        format_func=lambda x: {
+            'en': '🇬🇧 English',
+            'hi': '🇮🇳 हिंदी (Hindi)',
+            'ta': '🇮🇳 தமிழ் (Tamil)',
+            'te': '🇮🇳 తెలుగు (Telugu)',
+            'kn': '🇮🇳 ಕನ್ನಡ (Kannada)',
+            'ml': '🇮🇳 മലയാളം (Malayalam)'
+        }[x],
+        index=['en', 'hi', 'ta', 'te', 'kn', 'ml'].index(st.session_state.lang),
+        key='language_selector'
+    )
+    st.session_state.lang = lang
+    
     st.markdown("---")
     
-    st.header("📋 Property Details")
+    st.header(get_text(lang, 'sidebar_title'))
     property_id = st.text_input(
         "Property ID",
         value=f"PROP-{datetime.now().strftime('%Y%m%d-%H%M')}",
@@ -580,7 +604,6 @@ with tab1:
                     ✅ <strong>Analysis Complete!</strong> View comprehensive results in the Analysis Dashboard tab
                 </div>
                 """, unsafe_allow_html=True)
-                st.balloons()
     else:
         st.markdown("""
         <div class="info-box" style="text-align: center; padding: 3rem;">
@@ -605,8 +628,8 @@ with tab2:
             st.markdown(f"""
             <div class="metric-card">
                 <h2 class="metric-value">{results['risk_score']}</h2>
-                <p class="metric-label">Risk Score</p>
-                <p class="metric-sublabel">out of 100 points</p>
+                <p class="metric-label">{get_text(current_lang, 'risk_score')}</p>
+                <p class="metric-sublabel">{get_text(current_lang, 'risk_score_subtitle')}</p>
             </div>
             """, unsafe_allow_html=True)
             
@@ -614,8 +637,8 @@ with tab2:
             st.markdown(f"""
             <div class="metric-card">
                 <h2 class="metric-value">{results['total_defects']}</h2>
-                <p class="metric-label">Defects Found</p>
-                <p class="metric-sublabel">AI detected issues</p>
+                <p class="metric-label">{get_text(current_lang, 'defects_found')}</p>
+                <p class="metric-sublabel">{get_text(current_lang, 'defects_found_subtitle')}</p>
             </div>
             """, unsafe_allow_html=True)
             
@@ -623,8 +646,8 @@ with tab2:
             st.markdown(f"""
             <div class="metric-card">
                 <h2 class="metric-value">{results['high_risk']}</h2>
-                <p class="metric-label">Critical Issues</p>
-                <p class="metric-sublabel">immediate action needed</p>
+                <p class="metric-label">{get_text(current_lang, 'critical_issues')}</p>
+                <p class="metric-sublabel">{get_text(current_lang, 'critical_issues_subtitle')}</p>
             </div>
             """, unsafe_allow_html=True)
             
@@ -632,40 +655,40 @@ with tab2:
             st.markdown(f"""
             <div class="metric-card">
                 <h2 class="metric-value">₹{results['estimated_cost']:,}</h2>
-                <p class="metric-label">Repair Cost</p>
-                <p class="metric-sublabel">estimated total</p>
+                <p class="metric-label">{get_text(current_lang, 'repair_cost')}</p>
+                <p class="metric-sublabel">{get_text(current_lang, 'repair_cost_subtitle')}</p>
             </div>
             """, unsafe_allow_html=True)
         
         st.markdown("---")
         
         # Defect Analysis Section
-        st.markdown("### 🔍 Defect Analysis")
+        st.markdown(f"### {get_text(current_lang, 'defect_analysis')}")
         
         col1, col2 = st.columns([1, 2])
         
         with col1:
-            st.markdown("""
+            st.markdown(f"""
             <div class="error-box">
                 <h3 style="margin: 0; font-size: 2rem;">⚠️ 2</h3>
-                <strong>High Risk</strong><br/>
-                <small>Immediate attention required</small>
+                <strong>{get_text(current_lang, 'high_risk')}</strong><br/>
+                <small>{get_text(current_lang, 'high_risk_subtitle')}</small>
             </div>
             """, unsafe_allow_html=True)
             
-            st.markdown("""
+            st.markdown(f"""
             <div class="warning-box">
                 <h3 style="margin: 0; font-size: 2rem;">⚡ 3</h3>
-                <strong>Medium Risk</strong><br/>
-                <small>Schedule repairs soon</small>
+                <strong>{get_text(current_lang, 'medium_risk')}</strong><br/>
+                <small>{get_text(current_lang, 'medium_risk_subtitle')}</small>
             </div>
             """, unsafe_allow_html=True)
             
-            st.markdown("""
+            st.markdown(f"""
             <div class="info-box">
                 <h3 style="margin: 0; font-size: 2rem;">ℹ️ 2</h3>
-                <strong>Low Risk</strong><br/>
-                <small>Monitor over time</small>
+                <strong>{get_text(current_lang, 'low_risk')}</strong><br/>
+                <small>{get_text(current_lang, 'low_risk_subtitle')}</small>
             </div>
             """, unsafe_allow_html=True)
         
@@ -700,46 +723,41 @@ with tab2:
         col1, col2, col3 = st.columns(3)
         
         with col1:
-            violation_html = f"""
-            <div class="error-box">
-                <h3 style="margin: 0;">❌ {len(high_violations)} Critical Violation(s)</h3>
-                <hr style="margin: 1rem 0; opacity: 0.3;"/>
-            """
+            violation_html = f"""<div class="error-box">
+<h3 style="margin: 0;">❌ {len(high_violations)} Critical Violation(s)</h3>
+<hr style="margin: 1rem 0; opacity: 0.3;"/>
+"""
             
             for v in high_violations[:3]:  # Show top 3
-                violation_html += f"""
-                <small><strong>IRC {v.get('code', 'N/A')}</strong><br/>
-                {v.get('code_title', 'Unknown')}<br/>
-                📍 {v.get('location', 'Unknown location')}</small><br/><br/>
-                """
+                violation_html += f"""<small><strong>IRC {v.get('code', 'N/A')}</strong><br/>
+{v.get('code_title', 'Unknown')}<br/>
+📍 {v.get('location', 'Unknown location')}</small><br/><br/>
+"""
             
             violation_html += "</div>"
             st.markdown(violation_html, unsafe_allow_html=True)
         
         with col2:
-            review_html = f"""
-            <div class="warning-box">
-                <h3 style="margin: 0;">⚠️ {len(review_violations)} Under Review</h3>
-                <hr style="margin: 1rem 0; opacity: 0.3;"/>
-            """
+            review_html = f"""<div class="warning-box">
+<h3 style="margin: 0;">⚠️ {len(review_violations)} Under Review</h3>
+<hr style="margin: 1rem 0; opacity: 0.3;"/>
+"""
             
             for v in review_violations[:3]:  # Show top 3
-                review_html += f"""
-                <small><strong>IRC {v.get('code', 'N/A')}</strong><br/>
-                {v.get('defect', 'Unknown')}</small><br/>
-                """
+                review_html += f"""<small><strong>IRC {v.get('code', 'N/A')}</strong><br/>
+{v.get('defect', 'Unknown')}</small><br/>
+"""
             
             review_html += "</div>"
             st.markdown(review_html, unsafe_allow_html=True)
         
         with col3:
-            st.markdown("""
-            <div class="success-box">
-                <h3 style="margin: 0;">✅ 5 Compliant</h3>
-                <hr style="margin: 1rem 0; opacity: 0.3;"/>
-                <small>Meets all building code standards<br/>No violations detected<br/>Safe for occupancy</small>
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown("""<div class="success-box">
+<h3 style="margin: 0;">✅ Compliant Areas</h3>
+<hr style="margin: 1rem 0; opacity: 0.3;"/>
+<small>Meets all building code standards<br/>No violations detected<br/>Safe for occupancy</small>
+</div>
+""", unsafe_allow_html=True)
         
         # Visual Analytics
         st.markdown("---")
