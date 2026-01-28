@@ -758,3 +758,87 @@ class AgentOrchestrator:
         report = self.finance_agent.generate_report(all_defects, compliance_data)
         
         return report
+
+class ChatAgent:
+    """AI-powered chatbot for property inspection questions"""
+    
+    def __init__(self, openai_api_key=None):
+        self.openai_api_key = openai_api_key or os.getenv('OPENAI_API_KEY')
+        if self.openai_api_key:
+            self.client = OpenAI(api_key=self.openai_api_key)
+        else:
+            self.client = None
+            print("WARNING: No OpenAI API key found for ChatAgent")
+    
+    def chat(self, user_message, analysis_context, chat_history=None, language='en'):
+        """Generate chatbot response based on analysis context"""
+        if not self.client:
+            return "❌ Chatbot unavailable. Please set OPENAI_API_KEY environment variable."
+        
+        try:
+            # Build context from analysis results
+            defects_summary = self._format_defects(analysis_context.get('defects', []))
+            
+            context = f"""You are a helpful property inspection assistant. Answer questions about this property inspection in a clear, professional, and friendly manner.
+
+PROPERTY INSPECTION SUMMARY:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Risk Score: {analysis_context.get('risk_score', 'N/A')}/100
+Total Defects Found: {analysis_context.get('total_defects', 0)}
+High Risk Issues: {analysis_context.get('high_risk', 0)}
+Medium Risk Issues: {analysis_context.get('medium_risk', 0)}
+Low Risk Issues: {analysis_context.get('low_risk', 0)}
+Estimated Repair Cost: ₹{analysis_context.get('total_cost', 0):,}
+
+DETECTED DEFECTS:
+{defects_summary}
+
+INSTRUCTIONS:
+- Answer questions clearly and concisely
+- Provide specific recommendations when asked
+- Reference the actual defects found in the inspection
+- Be helpful and professional
+- If asked about costs, use the estimated costs from the analysis
+- If asked about urgency, reference the severity levels
+- Keep responses under 150 words unless more detail is specifically requested
+"""
+            
+            # Build messages
+            messages = [{"role": "system", "content": context}]
+            
+            # Add chat history if provided
+            if chat_history:
+                messages.extend(chat_history)
+            
+            # Add user message
+            messages.append({"role": "user", "content": user_message})
+            
+            # Call OpenAI
+            response = self.client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=messages,
+                temperature=0.7,
+                max_tokens=250
+            )
+            
+            return response.choices[0].message.content
+            
+        except Exception as e:
+            print(f"ChatAgent error: {e}")
+            return f"❌ Sorry, I encountered an error: {str(e)}"
+    
+    def _format_defects(self, defects):
+        """Format defects for context"""
+        if not defects:
+            return "No defects found."
+        
+        formatted = []
+        for idx, defect in enumerate(defects, 1):
+            formatted.append(f"""
+{idx}. {defect.get('type', 'Unknown')} ({defect.get('severity', 'Unknown')} Severity)
+   Location: {defect.get('location', 'Unknown')}
+   Cost: ₹{defect.get('cost', 0):,}
+   Description: {defect.get('description', 'N/A')}
+""")
+        
+        return "\n".join(formatted)

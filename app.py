@@ -7,7 +7,7 @@ from datetime import datetime
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from simplified_backend import AgentOrchestrator
+from simplified_backend import AgentOrchestrator, ChatAgent
 from translations import get_text
 import time
 
@@ -385,11 +385,38 @@ def get_orchestrator():
 
 orchestrator = get_orchestrator()
 
-# Animated Header
+# Animated Header with Day/Night Icon
 # Get current language for header
 current_lang = st.session_state.get('lang', 'en')
-st.markdown(f'<h1 class="main-header">{get_text(current_lang, "app_title")}</h1>', unsafe_allow_html=True)
-st.markdown(f'<p class="subtitle">{get_text(current_lang, "app_subtitle")}</p>', unsafe_allow_html=True)
+
+# Day/Night Icon based on current time
+current_hour = datetime.now().hour
+if 5 <= current_hour < 7:
+    time_icon = "🌅"
+    time_label = "Sunrise"
+elif 7 <= current_hour < 17:
+    time_icon = "☀️"
+    time_label = "Day"
+elif 17 <= current_hour < 19:
+    time_icon = "🌆"
+    time_label = "Sunset"
+else:
+    time_icon = "🌙"
+    time_label = "Night"
+
+# Header with icon
+col1, col2 = st.columns([6, 1])
+with col1:
+    st.markdown(f'<h1 class="main-header">{get_text(current_lang, "app_title")}</h1>', unsafe_allow_html=True)
+    st.markdown(f'<p class="subtitle">{get_text(current_lang, "app_subtitle")}</p>', unsafe_allow_html=True)
+with col2:
+    st.markdown(f"""
+    <div style='text-align: right; padding-top: 1.5rem;'>
+        <div style='font-size: 3rem; line-height: 1;'>{time_icon}</div>
+        <div style='font-size: 0.8rem; color: #94a3b8; margin-top: 0.5rem;'>{time_label}</div>
+        <div style='font-size: 0.7rem; color: #64748b;'>{datetime.now().strftime('%I:%M %p')}</div>
+    </div>
+    """, unsafe_allow_html=True)
 
 # Initialize session state
 if 'uploaded_images' not in st.session_state:
@@ -421,6 +448,237 @@ with st.sidebar:
         key='language_selector'
     )
     st.session_state.lang = lang
+    
+    st.markdown("---")
+    
+    # Theme Toggle
+    st.markdown("### 🎨 Theme")
+    
+    # Initialize theme in session state
+    if 'theme' not in st.session_state:
+        st.session_state.theme = 'dark'  # Default to dark
+    
+    # Theme selector
+    theme_option = st.radio(
+        "Choose theme:",
+        options=['dark', 'light'],
+        format_func=lambda x: '🌙 Dark Mode' if x == 'dark' else '☀️ Light Mode',
+        index=0 if st.session_state.theme == 'dark' else 1,
+        horizontal=True,
+        key='theme_selector'
+    )
+    
+    # Update theme
+    if theme_option != st.session_state.theme:
+        st.session_state.theme = theme_option
+        st.rerun()
+    
+    # Apply theme CSS
+    if st.session_state.theme == 'light':
+        st.markdown("""
+        <style>
+            /* Light Mode Overrides */
+            .stApp {
+                background-color: #f8fafc !important;
+                color: #1e293b !important;
+            }
+            
+            /* Main content area */
+            .main .block-container {
+                background-color: #ffffff !important;
+                padding: 2rem !important;
+                border-radius: 1rem !important;
+            }
+            
+            .main-header {
+                background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
+                -webkit-background-clip: text !important;
+                -webkit-text-fill-color: transparent !important;
+            }
+            
+            .subtitle {
+                color: #64748b !important;
+            }
+            
+            /* Metric cards */
+            .metric-card {
+                background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%) !important;
+                border: 2px solid #e2e8f0 !important;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+            }
+            
+            .metric-value {
+                color: #1e293b !important;
+            }
+            
+            .metric-label {
+                color: #475569 !important;
+            }
+            
+            .metric-sublabel {
+                color: #64748b !important;
+            }
+            
+            /* Info boxes */
+            .error-box {
+                background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+                border-left: 4px solid #ef4444 !important;
+                color: #991b1b !important;
+            }
+            
+            .warning-box {
+                background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+                border-left: 4px solid #f59e0b !important;
+                color: #92400e !important;
+            }
+            
+            .info-box {
+                background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+                border-left: 4px solid #3b82f6 !important;
+                color: #1e40af !important;
+            }
+            
+            .success-box {
+                background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+                border-left: 4px solid #10b981 !important;
+                color: #065f46 !important;
+            }
+            
+            /* Sidebar */
+            [data-testid="stSidebar"] {
+                background-color: #ffffff !important;
+                border-right: 1px solid #e2e8f0 !important;
+            }
+            
+            [data-testid="stSidebar"] * {
+                color: #1e293b !important;
+            }
+            
+            [data-testid="stSidebar"] h1, 
+            [data-testid="stSidebar"] h2, 
+            [data-testid="stSidebar"] h3 {
+                color: #0f172a !important;
+            }
+            
+            /* File uploader */
+            [data-testid="stFileUploader"] {
+                background-color: #ffffff !important;
+                border: 2px dashed #cbd5e1 !important;
+                border-radius: 0.5rem !important;
+            }
+            
+            [data-testid="stFileUploader"] section {
+                background-color: #f8fafc !important;
+                border: none !important;
+            }
+            
+            [data-testid="stFileUploader"] label {
+                color: #1e293b !important;
+            }
+            
+            /* Buttons */
+            .stButton button {
+                background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+                color: white !important;
+                border: none !important;
+            }
+            
+            .stButton button:hover {
+                background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+            }
+            
+            /* Tabs */
+            .stTabs [data-baseweb="tab-list"] {
+                background-color: #f8fafc !important;
+                border-bottom: 2px solid #e2e8f0 !important;
+            }
+            
+            .stTabs [data-baseweb="tab"] {
+                color: #64748b !important;
+                background-color: transparent !important;
+            }
+            
+            .stTabs [aria-selected="true"] {
+                color: #3b82f6 !important;
+                border-bottom-color: #3b82f6 !important;
+                background-color: #ffffff !important;
+            }
+            
+            /* Tables */
+            .stDataFrame {
+                background-color: #ffffff !important;
+                border: 1px solid #e2e8f0 !important;
+            }
+            
+            .stDataFrame table {
+                color: #1e293b !important;
+            }
+            
+            .stDataFrame th {
+                background-color: #f1f5f9 !important;
+                color: #0f172a !important;
+            }
+            
+            /* Inputs */
+            .stTextInput input, 
+            .stTextArea textarea,
+            .stSelectbox select,
+            .stDateInput input {
+                background-color: #ffffff !important;
+                color: #1e293b !important;
+                border: 1px solid #cbd5e1 !important;
+            }
+            
+            .stTextInput input:focus,
+            .stTextArea textarea:focus {
+                border-color: #3b82f6 !important;
+                box-shadow: 0 0 0 1px #3b82f6 !important;
+            }
+            
+            /* Radio buttons */
+            .stRadio label {
+                color: #1e293b !important;
+            }
+            
+            /* Expander */
+            .streamlit-expanderHeader {
+                background-color: #f8fafc !important;
+                color: #1e293b !important;
+                border: 1px solid #e2e8f0 !important;
+            }
+            
+            .streamlit-expanderContent {
+                background-color: #ffffff !important;
+                border: 1px solid #e2e8f0 !important;
+            }
+            
+            /* Progress bars */
+            .stProgress > div > div {
+                background-color: #3b82f6 !important;
+            }
+            
+            /* Headers */
+            h1, h2, h3, h4, h5, h6 {
+                color: #0f172a !important;
+            }
+            
+            /* Markdown text */
+            p, li, span {
+                color: #334155 !important;
+            }
+            
+            /* Code blocks */
+            code {
+                background-color: #f1f5f9 !important;
+                color: #1e293b !important;
+            }
+            
+            /* Dividers */
+            hr {
+                border-color: #e2e8f0 !important;
+            }
+        </style>
+        """, unsafe_allow_html=True)
     
     st.markdown("---")
     
@@ -458,6 +716,70 @@ with st.sidebar:
             <small>Real-time processing ready</small>
         </div>
     """, unsafe_allow_html=True)
+    
+    st.markdown("---")
+    
+    # AI Chatbot
+    st.subheader("💬 Ask AI Assistant")
+    
+    # Initialize chat history in session state
+    if 'chat_history' not in st.session_state:
+        st.session_state.chat_history = []
+    
+    # Only show chatbot if analysis is complete
+    if st.session_state.analysis_complete and st.session_state.mock_results:
+        user_question = st.text_input(
+            "Ask about your property:",
+            placeholder="What should I fix first?",
+            key="chat_input"
+        )
+        
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            ask_button = st.button("Ask", type="primary", use_container_width=True)
+        with col2:
+            if st.button("Clear", use_container_width=True):
+                st.session_state.chat_history = []
+                st.rerun()
+        
+        if ask_button and user_question:
+            with st.spinner("🤔 Thinking..."):
+                # Initialize ChatAgent
+                chat_agent = ChatAgent()
+                
+                # Get response
+                response = chat_agent.chat(
+                    user_question,
+                    st.session_state.mock_results,
+                    st.session_state.chat_history,
+                    current_lang
+                )
+                
+                # Add to history
+                st.session_state.chat_history.append({"role": "user", "content": user_question})
+                st.session_state.chat_history.append({"role": "assistant", "content": response})
+        
+        # Display chat history (last 6 messages = 3 exchanges)
+        if st.session_state.chat_history:
+            st.markdown("---")
+            st.markdown("**💭 Chat History:**")
+            for msg in st.session_state.chat_history[-6:]:
+                if msg["role"] == "user":
+                    st.markdown(f"""
+                    <div style='background: #1e293b; padding: 0.75rem; border-radius: 0.5rem; margin: 0.5rem 0;'>
+                        <strong style='color: #60a5fa;'>You:</strong><br/>
+                        <span style='color: #e2e8f0;'>{msg['content']}</span>
+                    </div>
+                    """, unsafe_allow_html=True)
+                else:
+                    st.markdown(f"""
+                    <div style='background: #0f172a; padding: 0.75rem; border-radius: 0.5rem; margin: 0.5rem 0; border-left: 3px solid #10b981;'>
+                        <strong style='color: #10b981;'>AI:</strong><br/>
+                        <span style='color: #cbd5e1;'>{msg['content']}</span>
+                    </div>
+                    """, unsafe_allow_html=True)
+    else:
+        st.info("Complete an analysis to chat with AI assistant")
     
     st.markdown("---")
     
@@ -662,6 +984,89 @@ with tab2:
         
         st.markdown("---")
         
+        # Risk Score Explanation
+        with st.expander("📊 How is Risk Score Calculated? (Click to expand)", expanded=False):
+            st.markdown(f"### Risk Score Breakdown: **{results['risk_score']}/100**")
+            
+            # Calculate breakdown
+            high_count = results['high_risk']
+            medium_count = results['medium_risk']
+            low_count = results['low_risk']
+            
+            # Points per severity (based on backend logic)
+            high_points = min(high_count * 25, 60)  # Max 60 points from high
+            medium_points = min(medium_count * 12, 30)  # Max 30 points from medium
+            low_points = min(low_count * 5, 15)  # Max 15 points from low
+            
+            st.markdown("**Points by Severity:**")
+            
+            # High severity
+            col1, col2 = st.columns([3, 1])
+            with col1:
+                st.progress(min(high_points / 100, 1.0))
+            with col2:
+                st.markdown(f"**{high_points}** pts")
+            st.caption(f"🚨 High Severity Defects ({high_count}) - Up to 25 points each")
+            
+            # Medium severity
+            col1, col2 = st.columns([3, 1])
+            with col1:
+                st.progress(min(medium_points / 100, 1.0))
+            with col2:
+                st.markdown(f"**{medium_points}** pts")
+            st.caption(f"⚠️ Medium Severity Defects ({medium_count}) - Up to 12 points each")
+            
+            # Low severity
+            col1, col2 = st.columns([3, 1])
+            with col1:
+                st.progress(min(low_points / 100, 1.0))
+            with col2:
+                st.markdown(f"**{low_points}** pts")
+            st.caption(f"ℹ️ Low Severity Defects ({low_count}) - Up to 5 points each")
+            
+            st.markdown("---")
+            
+            # Risk level explanation
+            risk_score = results['risk_score']
+            if risk_score < 30:
+                st.success("""
+                ✅ **Low Risk (0-30 points)**
+                
+                Your property is in good condition with only minor issues. These defects are manageable and don't pose immediate safety concerns.
+                
+                **Recommended Action:** Schedule routine maintenance within 60-90 days.
+                """)
+            elif risk_score < 60:
+                st.warning("""
+                ⚠️ **Medium Risk (30-60 points)**
+                
+                Your property has some notable issues that should be addressed soon. While not immediately dangerous, these defects could worsen if left unattended.
+                
+                **Recommended Action:** Schedule repairs within 30 days to prevent escalation.
+                """)
+            else:
+                st.error("""
+                🚨 **High Risk (60-100 points)**
+                
+                Your property has critical issues requiring immediate professional attention. These defects may pose safety hazards or could lead to significant structural damage.
+                
+                **Recommended Action:** Contact a licensed professional within 7 days for urgent repairs.
+                """)
+            
+            # Cost context
+            st.markdown("---")
+            st.markdown(f"""
+            **💰 Estimated Repair Investment:** ₹{results['estimated_cost']:,}
+            
+            This estimate is based on typical Indian market rates for the identified defects. Actual costs may vary based on:
+            - Local labor rates
+            - Material quality and availability
+            - Extent of hidden damage
+            - Contractor selection
+            """)
+        
+        st.markdown("---")
+        
         # Defect Analysis Section
         st.markdown(f"### {get_text(current_lang, 'defect_analysis')}")
         
@@ -693,7 +1098,7 @@ with tab2:
             """, unsafe_allow_html=True)
         
         with col2:
-            # Enhanced Defects Table
+            # Enhanced Defects Table with TTS
             df_defects = pd.DataFrame(results['defects'])
             
             st.dataframe(
@@ -702,6 +1107,76 @@ with tab2:
                 hide_index=True,
                 height=400
             )
+            
+            # Text-to-Speech Controls
+            st.markdown("---")
+            st.markdown("**🔊 Text Reading:**")
+            
+            col_tts1, col_tts2 = st.columns(2)
+            
+            with col_tts1:
+                if st.button("📖 Read All Defects", use_container_width=True):
+                    # Build text to read
+                    defects_text = f"Property Analysis Report. Risk Score: {results['risk_score']} out of 100. "
+                    defects_text += f"Total defects found: {results['total_defects']}. "
+                    
+                    for idx, defect in enumerate(results['defects'], 1):
+                        defects_text += f"Defect {idx}: {defect['type']}. "
+                        defects_text += f"Severity: {defect['severity']}. "
+                        defects_text += f"Location: {defect['location']}. "
+                        defects_text += f"Estimated cost: {defect['cost']} rupees. "
+                        defects_text += f"Description: {defect['description']}. "
+                    
+                    # JavaScript for TTS
+                    st.components.v1.html(f"""
+                    <script>
+                        const text = `{defects_text}`;
+                        const utterance = new SpeechSynthesisUtterance(text);
+                        utterance.rate = 0.9;
+                        utterance.pitch = 1.0;
+                        utterance.volume = 1.0;
+                        window.speechSynthesis.speak(utterance);
+                    </script>
+                    <div style="padding: 1rem; background: #10b981; color: white; border-radius: 0.5rem; text-align: center;">
+                        🔊 Reading defects aloud...
+                    </div>
+                    """, height=60)
+            
+            with col_tts2:
+                if st.button("⏹️ Stop Reading", use_container_width=True):
+                    st.components.v1.html("""
+                    <script>
+                        window.speechSynthesis.cancel();
+                    </script>
+                    <div style="padding: 1rem; background: #ef4444; color: white; border-radius: 0.5rem; text-align: center;">
+                        ⏹️ Stopped
+                    </div>
+                    """, height=60)
+            
+            # Individual defect reading
+            st.markdown("**Read Individual Defects:**")
+            for idx, defect in enumerate(results['defects']):
+                col_def, col_btn = st.columns([4, 1])
+                with col_def:
+                    st.caption(f"{idx+1}. {defect['type']} - {defect['location']}")
+                with col_btn:
+                    if st.button("🔊", key=f"read_defect_{idx}"):
+                        defect_text = f"{defect['type']} at {defect['location']}. "
+                        defect_text += f"Severity: {defect['severity']}. "
+                        defect_text += f"Cost: {defect['cost']} rupees. "
+                        defect_text += f"{defect['description']}"
+                        
+                        st.components.v1.html(f"""
+                        <script>
+                            const text = `{defect_text}`;
+                            const utterance = new SpeechSynthesisUtterance(text);
+                            utterance.rate = 0.9;
+                            window.speechSynthesis.speak(utterance);
+                        </script>
+                        <div style="padding: 0.5rem; background: #3b82f6; color: white; border-radius: 0.25rem; font-size: 0.8rem; text-align: center;">
+                            🔊 Reading...
+                        </div>
+                        """, height=40)
         
         st.markdown("---")
         
