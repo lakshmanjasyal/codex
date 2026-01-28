@@ -533,6 +533,11 @@ Return ONLY a JSON array. No other text."""
         # Sort by confidence (highest first)
         combined.sort(key=lambda x: -x["confidence"])
         
+        # Apply aggressive cost reduction to make estimates very affordable
+        # Reduce individual defect costs by 70% (multiply by 0.3)
+        for defect in combined:
+            defect["estimated_cost"] = int(defect["estimated_cost"] * 0.3)
+        
         # Limit to top 5 most confident defects
         return combined[:5]
 
@@ -605,16 +610,16 @@ class FinanceAgent:
         risk_score = self._calculate_risk_score(defects)
         
         # Adjust total cost based on risk score
-        # Very reduced multipliers for affordable estimates
-        # Risk 0-30: 0.3x, Risk 30-50: 0.4x, Risk 50-70: 0.5x, Risk 70+: 0.7x
+        # Using realistic multipliers based on risk level
+        # A higher risk property often requires specialized inspection and higher labor overhead
         if risk_score < 30:
-            cost_multiplier = 0.1
+            cost_multiplier = 1.0  # Basic repairs
         elif risk_score < 50:
-            cost_multiplier = 0.2
+            cost_multiplier = 1.1  # Moderate repairs with coordination
         elif risk_score < 70:
-            cost_multiplier = 0.3
+            cost_multiplier = 1.25  # Complex repairs
         else:
-            cost_multiplier = 0.4
+            cost_multiplier = 1.4  # High-risk structural repairs with professional oversight
         
         total_cost = int(base_total_cost * cost_multiplier)
         
