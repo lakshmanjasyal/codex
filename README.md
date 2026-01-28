@@ -1,4 +1,4 @@
-# 🏆 SafeNest AI - National Prize Winning Project
+# 🏆 SafeNest AI 
 ## Real-time Residential Infrastructure Intelligence for Safety & Quality Assurance
 
 > **The Ultimate GenAI-Powered Inspection Intelligence Platform**
