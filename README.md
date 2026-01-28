@@ -22,7 +22,6 @@ SafeNest AI provides an intelligent assistant that handles the heavy lifting:
 
 ### Prerequisites
 - **Python 3.8+**
-- **API Keys**: You will need an OpenAI API key (and optionally a Grok API key for enhanced analysis).
 
 ### Installation & Setup
 
@@ -35,7 +34,7 @@ SafeNest AI provides an intelligent assistant that handles the heavy lifting:
 2. **Create a virtual environment**
    ```bash
    python -m venv venv
-   source venv/bin/activate  # Windows: venv\Scripts\activate
+   source venv/bin/activate  # Windows: venv\\Scripts\\activate
    ```
 
 3. **Install dependencies**
@@ -43,14 +42,7 @@ SafeNest AI provides an intelligent assistant that handles the heavy lifting:
    pip install -r requirements.txt
    ```
 
-4. **Add your credentials**
-   Create a `.env` file in the project root:
-   ```env
-   OPENAI_API_KEY=your_openai_key_here
-   GROK_API_KEY=your_grok_key_here
-   ```
-
-5. **Launch SafeNest AI**
+4. **Launch SafeNest AI**
    ```bash
    streamlit run app.py
    ```
