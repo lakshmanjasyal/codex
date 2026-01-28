@@ -1,4 +1,4 @@
-# SafeNest AI - Premium Frontend with Modern Design
+# SafeNest AI -  Frontend with Modern Design
 import streamlit as st
 from PIL import Image
 import io
