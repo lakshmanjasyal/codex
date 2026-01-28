@@ -709,7 +709,7 @@ with st.sidebar:
         </div>
         <div class="warning-box">
             <strong>⏳ AI Engine</strong><br/>
-            <small>Demo Mode - Mock Data</small>
+            <small>AI-Powered Analysis Active</small>
         </div>
         <div class="info-box">
             <strong>📊 Analytics</strong><br/>
